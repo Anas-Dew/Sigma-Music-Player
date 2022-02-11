@@ -4,35 +4,32 @@ from tkinter import ttk
 from tkinter import messagebox
 from pygame import mixer
 import webbrowser
-from time import sleep
 import os
+
 os.chdir('Music_Player')
-
-
 mixer.init()
 root = Tk()
-width = 400
-height = 170
+
+width,height = 400,190
 root.geometry(f"{width}x{height}")
 root.resizable(False, False)
-
+root.iconbitmap('icon.ico')
 root.title("Sigma Music Player")
 mixer.music.load("Sigmaintro.mp3")
 mixer.music.play()
+
 bottom_plate = Label(text="Anas-Dew", bg="Black",
                      fg="White", font="sans 9 italic")
 bottom_plate.pack(side=BOTTOM, fill=X)
 
 # ---NECESARY FUNCTIONS------------------------------------
 
-
 def select_file():
-    global main_title
     filetypes = (
         ('Music files', '*.mp3'),
         ('All files', '*.*')
     )
-
+    
     mfile = fd.askopenfilename(
         title='Open music',
         initialdir='/',
@@ -42,45 +39,22 @@ def select_file():
     mixer.music.play()
     title_bar.config(text="Playing...")
 
+def select_folder():
+    messagebox.showwarning("Alert !","This feature is in development.\n For updates, visit Github.")
+    mfolder = fd.askdirectory()
+    print("Selected Folder -> " + mfolder)
+    os.chdir(mfolder)
+    print("Current Dir ->"+ os.getcwd())
 
 def Pause():
     mixer.music.pause()
     title_bar.config(text="Paused.")
-# to stop the  song
-
-
-def Stop():
-    mixer.music.stop()
-
 
 def Resume():
     mixer.music.unpause()
     title_bar.config(text="Playing...")
-# MENU BAR-----------------------------------------------------
 
-
-def menu_bar():
-    menubar = Menu(root)
-
-    def loop():
-        messagebox.showwarning("Alert","This feature is in development.")
-
-    # Adding File Menu and commands
-    file = Menu(menubar, tearoff=0)
-    menubar.add_cascade(label='File', menu=file)
-    file.add_command(label='Open...', command=lambda: select_file())
-    file.add_command(label='Replay', command=lambda: mixer.music.play())
-    file.add_checkbutton(label='Loop',command=loop)
-    file.add_separator()
-    file.add_command(label='Exit', command=root.destroy)
-
-    # Adding more Menu and commands
-    more = Menu(menubar, tearoff=0)
-    menubar.add_cascade(label='More', menu=more)
-    more.add_command(label='Source Code',command=lambda: webbrowser.open_new(
-        r"https://github.com/Anas-Dew/Sigma-Music-Player"))
-
-    def meow():
+def meow():
        user_choice = messagebox.askyesno("Feedback","Did you like this app ?")
        print(user_choice)
        if user_choice == True:
@@ -89,32 +63,50 @@ def menu_bar():
                messagebox.showinfo("Redirect","You are being redirected to Github.")
                webbrowser.open_new(
         r"https://github.com/Anas-Dew/Sigma-Music-Player")
-           
+        
+#-----------------------MENU BAR---------------------------
+
+def menu_bar():
+    menubar = Menu(root)
+
+    def loop():
+        messagebox.showwarning("Alert","This feature is in development.")
+
+    #-----------Adding File Menu and commands-------------------
+    file = Menu(menubar, tearoff=0)
+    menubar.add_cascade(label='File', menu=file)
+    file.add_command(label='Select Music Folder', command=select_folder)
+    file.add_command(label='Open...', command=lambda: select_file())
+    file.add_separator()
+    file.add_command(label='Replay', command=lambda: mixer.music.play())
+    file.add_checkbutton(label='Loop',command=loop)
+    file.add_separator()
+    file.add_command(label='Exit', command=root.destroy)
+
+    # ----------Adding more Menu and commands------------
+    more = Menu(menubar, tearoff=0)
+    menubar.add_cascade(label='More', menu=more)
+    more.add_command(label='Source Code',command=lambda: webbrowser.open_new(
+        r"https://github.com/Anas-Dew/Sigma-Music-Player"))
+        
     more.add_command(label='Meow !!', command=meow)
     more.add_separator()
-    more.add_command(label='About', command=lambda: messagebox.showinfo("Developer's Note","Have you liked this little project ? Give your feedback/suggestion on Github and follow up there for more future big projects."))
+    more.add_command(label='Thanks !', command=lambda: messagebox.showinfo("Developer's Note","Thank you for using. ❤ \nHope you liked it."))
     root.config(menu=menubar)
 
-
 menu_bar()
-# -------------------------------------------------------------
-open_button = ttk.Button(
-    root,
-    text='Open Music',
-    command=lambda: select_file()
-)
+# ---------------LIST-BOX---------------------------------------------------
+# music_list = Listbox(root,height=7,width=65).pack()
+# -------------SCREEN-BUTTON------------------------------------------------
 
-open_button.pack(expand=True)
+open_button = ttk.Button(root,text='Open Music',command=select_file)
+open_button.pack(expand=False,pady=40)
 
-# --------------------------------------------------------
-# NAVIGATION FRAME
-play_navi = Frame(root, bg="dark grey", width=10,
-                  borderwidth=5, relief="groove")
-# can_widget = Canvas(root, width=100,height=50,bg="grey",borderwidth=0)
-# can_widget.pack()
+# ------------------NAVIGATION FRAME--------------------------------------
+play_navi = Frame(root, bg="dark grey", width=10,borderwidth=3,relief=SUNKEN)
 
 title_bar = Label(play_navi, text="Choose Music",
-                  bg="dark grey", fg="black", font="Purisa 19 italic")
+                  bg="dark grey", fg="black", font="Purisa 15 italic")
 title_bar.pack(side=LEFT, padx=10)
 pause_button = Button(play_navi, text="Pause",
                       bg="Black", fg="White", font="sans 9 italic", padx=15, command=Pause)
@@ -124,7 +116,5 @@ resume_button = Button(play_navi, text="Resume",
 resume_button.pack(side=RIGHT, padx=20)
 
 play_navi.pack(side=BOTTOM, fill=X)
-
-# ------------------------------------------------------
-
+#------------------------------------------------------
 root.mainloop()

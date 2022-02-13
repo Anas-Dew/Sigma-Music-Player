@@ -5,8 +5,22 @@ from tkinter import messagebox
 from pygame import mixer
 import webbrowser
 import os
+from os import system, name
 
-os.chdir('/home/anas-sew/Projects/Sigma-Music-Player/Music_Player')
+
+def dir():
+  
+    # for windows
+    if name == 'nt':
+        _ = os.chdir('C:/Sigma/bin')
+  
+    # for mac and linux(here, os.name is 'posix')
+    else:
+        username = os.getlogin()
+        _ = os.chdir(f'/home/{username}/Sigma/bin')
+
+dir()
+
 mixer.init()
 root = Tk()
 

@@ -6,14 +6,14 @@ from pygame import mixer
 import webbrowser
 import os
 
-os.chdir('Music_Player')
+os.chdir('/home/anas-sew/Projects/Sigma-Music-Player/Music_Player')
 mixer.init()
 root = Tk()
 
 width,height = 400,190
 root.geometry(f"{width}x{height}")
 root.resizable(False, False)
-root.iconbitmap('icon.ico')
+# root.iconbitmap('icon.bmp')
 root.title("Sigma Music Player")
 mixer.music.load("Sigmaintro.mp3")
 mixer.music.play()
@@ -23,7 +23,6 @@ bottom_plate = Label(text="Anas-Dew", bg="Black",
 bottom_plate.pack(side=BOTTOM, fill=X)
 
 # ---NECESARY FUNCTIONS------------------------------------
-
 def select_file():
     filetypes = (
         ('Music files', '*.mp3'),
@@ -33,19 +32,25 @@ def select_file():
     mfile = fd.askopenfilename(
         title='Open music',
         initialdir='/',
-        filetypes=filetypes)
+        filetypes=filetypes
+        )
     print("File Path : " + mfile)
     mixer.music.load(mfile)
     mixer.music.play()
     title_bar.config(text="Playing...")
-
+'''
+Dis-countinued------
 def select_folder():
-    messagebox.showwarning("Alert !","This feature is in development.\n For updates, visit Github.")
     mfolder = fd.askdirectory()
     print("Selected Folder -> " + mfolder)
-    os.chdir(mfolder)
-    print("Current Dir ->"+ os.getcwd())
-
+    with open("cookie.ch","w") as c:
+        c.write(str(mfolder))
+        c.close()
+with open("cookie.ch","r") as c:
+    path = c.readline()
+    os.chdir(path)
+    c.close() 
+'''       
 def Pause():
     mixer.music.pause()
     title_bar.config(text="Paused.")
@@ -75,7 +80,6 @@ def menu_bar():
     #-----------Adding File Menu and commands-------------------
     file = Menu(menubar, tearoff=0)
     menubar.add_cascade(label='File', menu=file)
-    file.add_command(label='Select Music Folder', command=select_folder)
     file.add_command(label='Open...', command=lambda: select_file())
     file.add_separator()
     file.add_command(label='Replay', command=lambda: mixer.music.play())
